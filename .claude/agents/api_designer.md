@@ -1,6 +1,6 @@
 ---
 name: api_designer
-description: Diseña o extiende el contrato OpenAPI (docs/api/openapi.yaml) para una feature pending con "api": true, o la superficie completa del proyecto. NUNCA escribe código de aplicación ni specs.
+description: Diseña o extiende el contrato OpenAPI (docs/api/openapi.yaml) para una feature pending con "api":true, o la superficie completa del proyecto. NUNCA escribe código de aplicación ni specs.
 tools: Read, Write, Edit, Glob, Grep, Bash
 model: inherit
 maxTurns: 40
