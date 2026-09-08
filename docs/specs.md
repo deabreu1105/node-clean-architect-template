@@ -19,13 +19,16 @@ El `feature-name` coincide con el campo `name` de `feature_list.json`.
 
 ## Estados de una feature
 
-| Estado         | Significado                                                    |
-|----------------|----------------------------------------------------------------|
-| `pending`      | Sin spec. El `spec_author` es el primero en actuar.            |
-| `spec_ready`   | Spec drafted. Esperando aprobación humana. NO se toca código.  |
-| `in_progress`  | Spec aprobado. `implementer` trabajando.                       |
-| `done`         | Código verde, `reviewer` aprobó, sesión cerrada.               |
-| `blocked`      | Atascado. Razón en `progress/current.md`.                      |
+| Estado           | Significado                                                    |
+|------------------|-----------------------------------------------------------------|
+| `pending`        | Sin spec (ni contrato, si aplica). Actúa `api_designer` si `"api": true`, si no `spec_author`. |
+| `contract_ready` | Solo `"api": true`. Contrato drafted en `docs/api/openapi.yaml`. Esperando aprobación humana. |
+| `spec_ready`     | Spec drafted. Esperando aprobación humana. NO se toca código.  |
+| `in_progress`    | Spec aprobado. `implementer` trabajando.                       |
+| `done`           | Código verde, `reviewer` aprobó, sesión cerrada.               |
+| `blocked`        | Atascado. Razón en `progress/current.md`.                      |
+
+Ver `docs/api-design.md` para la fase de contrato y sus reglas.
 
 ## La puerta de aprobación humana
 
@@ -39,6 +42,10 @@ el `implementer`.
 ```
 pending → [spec_author] → spec_ready → ⏸ HUMANO → in_progress → [implementer → reviewer] → done
 ```
+
+Si la feature es `"api": true`, hay una puerta previa: `pending → [api_designer] →
+contract_ready → ⏸ HUMANO → spec_author...`. El `spec_author` entonces referencia el
+contrato ya aprobado en vez de diseñarlo — ver `docs/api-design.md`.
 
 ## requirements.md — EARS estricto
 
@@ -90,6 +97,9 @@ Captura **antes** de tocar código:
   viola la Regla de Dependencia (`docs/architecture.md`). Si la feature
   necesita algo externo desde un use-case, aquí se declara el puerto
   (interface/function type en `domain/`) y quién lo implementa.
+- **Si la feature es `"api": true`**: referencia cada endpoint por su `operationId`
+  exacto de `docs/api/openapi.yaml` (el contrato, ya aprobado en la puerta previa) —
+  nunca redescribas método/ruta/schemas en prosa. Ver `docs/api-design.md`.
 
 NO es ingeniería desde primeros principios — apóyate en
 `docs/architecture.md` y `docs/conventions.md`. El `design.md` documenta los

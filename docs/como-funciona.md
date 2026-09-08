@@ -21,20 +21,25 @@ Dos cosas que conviven:
 Lo valioso es el segundo. El esqueleto lo escribes en una tarde; el arnés es lo que evita
 que un agente te implemente con entusiasmo la cosa equivocada.
 
-## El modelo mental: dos puertas humanas
+## El modelo mental: tres puertas humanas
 
 Todo el diseño gira alrededor de esto:
 
 ```
-   idea  ──►  ⏸ apruebas el DISEÑO  ──►  spec  ──►  ⏸ apruebas el SPEC  ──►  código
+   idea  ──►  ⏸ apruebas el DISEÑO  ──►  [si expone HTTP] ⏸ apruebas el CONTRATO  ──►
+                                                                                       │
+   spec  ──►  ⏸ apruebas el SPEC  ──►  código
 ```
 
-Las dos `⏸` son paradas reales. El agente escribe, marca el estado y **se detiene** a
-esperarte. No es burocracia: es dónde se recupera el control.
+Las tres `⏸` son paradas reales. El agente escribe, marca el estado y **se detiene** a
+esperarte. No es burocracia: es dónde se recupera el control. La puerta del contrato solo
+aparece si la feature tiene `"api": true` — las que no exponen nada por HTTP la saltan.
 
-Revisar un spec de tres archivos cuesta cinco minutos. Revisar una implementación
-equivocada cuesta una tarde, y encima ya está escrita, así que la tentación es
-aprovecharla. La puerta mueve tu atención al momento en que corregir es barato.
+Revisar un spec de tres archivos cuesta cinco minutos; revisar un contrato de una
+operación, dos. Revisar una implementación equivocada cuesta una tarde, y encima ya está
+escrita, así que la tentación es aprovecharla. La puerta mueve tu atención al momento en
+que corregir es barato — y para una API, ese momento es antes de que el primer cliente
+externo dependa de su forma.
 
 La segunda idea de diseño es la **regla anti-teléfono-descompuesto**: los subagentes
 escriben sus resultados en disco y te devuelven *una línea*. No ves un volcado de
@@ -75,7 +80,19 @@ actualizado y ver qué ha aprendido el arnés desde entonces.
                                   ├──► feature en `pending`
      idea clara ──► /add-feature ─┘
                                   │
-                                  ▼
+                     ┌── "api": true ──┐        "api": false
+                     ▼                 │             │
+              /design-api              │             │
+        [api_designer] escribe         │             │
+        docs/api/openapi.yaml          │             │
+                     │                 │             │
+                     ▼                 │             │
+          ⏸  PARA — apruebas el       │             │
+              contrato                 │             │
+                     │                 │             │
+           /approve-contract           │             │
+                     └─────────────────┴─────────────┘
+                                  │
                           /implement-next
                                   │
                     [spec_author] escribe
@@ -94,12 +111,14 @@ actualizado y ver qué ha aprendido el arnés desde entonces.
                           /close-session
 ```
 
-Lo que escribes tú son seis comandos:
+Lo que escribes tú son ocho comandos:
 
 | Comando | Cuándo |
 |---|---|
 | `/brainstorm` | La idea está borrosa y quieres pensarla con alguien antes de comprometerla |
 | `/add-feature` | La idea está clara y solo falta registrarla |
+| `/design-api` | La feature expone HTTP (`"api": true`) y hace falta diseñar su contrato |
+| `/approve-contract` | Has leído el contrato y te vale |
 | `/implement-next` | Avanzar la siguiente feature, sea cual sea su estado |
 | `/approve-spec` | Has leído el spec y te vale |
 | `/run-review` | Forzar una review (p. ej. si la sesión se cortó a medias) |
@@ -113,10 +132,11 @@ importar.
 
 ## Lo que te protege sin que hagas nada
 
-**`./init.sh`** es la puerta que no se puede saltar. Siete secciones: entorno, archivos
-base del arnés, skills vendorizados, validez de `feature_list.json` y sus specs, Regla de
-Dependencia, typecheck y suite completa. Ninguna feature se marca `done` sin que esté en
-verde; lo corre el `reviewer`, y un hook lo dispara al cerrar sesión.
+**`./init.sh`** es la puerta que no se puede saltar. Entorno, archivos base del arnés,
+skills vendorizados, validez de `feature_list.json` y sus specs, Regla de Dependencia,
+contrato API sin deriva (`docs/api/openapi.yaml` vs. las rutas realmente montadas),
+typecheck y suite completa. Ninguna feature se marca `done` sin que esté en verde; lo
+corre el `reviewer`, y un hook lo dispara al cerrar sesión.
 
 Su comprobación más valiosa es la menos obvia: **una corrida verde con cero tests es
 roja**. La bifurcación anterior de este arnés hacía glob de un directorio que no existía,
@@ -129,15 +149,16 @@ jamás la suite real. Un arnés que puede mentirte no sirve para nada.
 | Editas… | Aparece |
 |---|---|
 | `src/domain/**` | La Regla de Dependencia: qué no puede importar la capa interna |
-| `src/presentation/**` | Errores, códigos de estado, frontera de salida |
+| `src/presentation/**` | Errores, códigos de estado, frontera de salida, ninguna ruta sin su operación en el contrato |
 | `src/**/*.test.ts` | Fakes tipados contra el puerto, cero I/O |
+| `docs/api/**/*.yaml` | `operationId`/`x-feature`/`x-status`, error siempre `{ error: string }`, solo `$ref` internos |
 | `src/**` | Convenciones de ESM, nombres y tipos estrictos |
 
 Son imperativas y cortas a propósito, con un puntero a `conventions.md` para el porqué. La
 diferencia con un README de capa es el momento: un README en `src/domain/` se lee *nunca*;
 una regla scopeada a `src/domain/**` se lee *exactamente cuando alguien edita domain*.
 
-**`CHECKPOINTS.md`** (`C1`–`C10`) es la lista con la que el `reviewer` aprueba o rechaza.
+**`CHECKPOINTS.md`** (`C1`–`C11`) es la lista con la que el `reviewer` aprueba o rechaza.
 Si tu proyecto tiene invariantes propios, los añades como `P1`…`Pn` en
 `project/checkpoints.md` sin tocar los `C` — así una versión futura del template puede
 añadir un `C11` sin chocar con tu numeración.
@@ -187,6 +208,7 @@ saltándotelo por costumbre. Que es peor.
 | Si quieres… | Lee |
 |---|---|
 | El paso a paso de cada fase | [`workflow.md`](workflow.md) |
+| Diseñar el contrato de una API (metodología API-first) | [`api-design.md`](api-design.md) |
 | Escribir o leer un spec (notación EARS) | [`specs.md`](specs.md) |
 | Las reglas de arquitectura | [`architecture.md`](architecture.md) |
 | Las convenciones de código | [`conventions.md`](conventions.md) |

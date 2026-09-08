@@ -38,6 +38,14 @@ El guard construye lo que está prohibido a partir de `harness.config.json`
 (`layers.outer` + `layers.bannedInInner`). Para ver el detalle:
 `node scripts/lib/dep-rule-pattern.mjs --explain`.
 
+Si el proyecto declara `harness.api` (features con `"api": true`), añade el guard del
+contrato:
+
+```bash
+pnpm exec tsx scripts/check-api-contract.mjs    # commands.apicheck
+# exit 0 esperado — ver checkpoint C11
+```
+
 ### Nivel 3 — Smoke test manual vía HTTP (obligatorio para features de API)
 
 Las features que añaden o cambian un endpoint se verifican levantando el
@@ -45,7 +53,11 @@ servidor real y golpeándolo, no solo con tests de dominio. Dos formas:
 
 - **`request/*.rest`** (formato REST Client): añade o edita el archivo
   correspondiente (`request/get-health.rest`, o uno nuevo para el endpoint
-  que estés añadiendo) y ejecútalo contra `pnpm dev`.
+  que estés añadiendo) y ejecútalo contra `pnpm dev`. Si la feature es
+  `"api": true`, deriva cada caso de los `examples` de su operación en
+  `docs/api/openapi.yaml` — el contrato ya tiene el camino feliz y al menos
+  un caso de error documentados; el `.rest` es esos mismos casos contra el
+  servidor real.
 - **`curl`** contra el servidor de desarrollo:
   ```bash
   pnpm dev &

@@ -1,0 +1,164 @@
+openapi: 3.1.0
+info:
+  title: Plantilla Clean Architecture (Node + TypeScript)
+  description: |
+    API REST de ejemplo montada sobre Clean Architecture estricta
+    (`presentation → infrastructure → domain`). Este contrato es la fuente de verdad de
+    la superficie HTTP: se verifica contra las rutas realmente montadas en
+    `src/presentation/routes.ts` por `scripts/check-api-contract.mjs` (checkpoint `C11`
+    de `CHECKPOINTS.md`).
+
+    Metodología y convenciones: `docs/api-design.md`.
+  version: "0.1.0"
+servers:
+  - url: http://localhost:3000
+    description: Desarrollo local (puerto de `src/.env`, ver `PORT`)
+
+tags:
+  - name: Health
+    description: Estado del servicio
+
+paths:
+  /api/health:
+    get:
+      operationId: getHealth
+      summary: Estado del servicio
+      description: >-
+        Devuelve el estado del servicio. Con `?verbose=true` añade metadata de runtime
+        (uptime, versión de Node, marca de tiempo de la comprobación).
+      tags: [Health]
+      x-feature: health
+      x-status: live
+      parameters:
+        - name: verbose
+          in: query
+          required: false
+          description: >-
+            Controla el nivel de detalle de la respuesta. Cualquier valor que no sea
+            `"true"` ni `"false"` responde `400` sin lanzar.
+          schema:
+            type: string
+            enum: ["true", "false"]
+      responses:
+        "200":
+          description: Servicio saludable.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/PublicHealth"
+                  - $ref: "#/components/schemas/PublicHealthVerbose"
+              examples:
+                minimal:
+                  summary: Respuesta mínima (sin `verbose`)
+                  value:
+                    status: ok
+                    appName: node-clean-architect-template
+                verbose:
+                  summary: Respuesta detallada (`verbose=true`)
+                  value:
+                    status: ok
+                    appName: node-clean-architect-template
+                    uptimeSeconds: 42.5
+                    nodeVersion: v20.11.0
+                    checkedAt: "2026-01-01T00:00:00.000Z"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+components:
+  schemas:
+    PublicHealth:
+      type: object
+      description: Proyección pública mínima de `HealthStatusEntity` (`toPublic(false)`).
+      required: [status, appName]
+      properties:
+        status:
+          type: string
+          const: ok
+        appName:
+          type: string
+      additionalProperties: false
+
+    PublicHealthVerbose:
+      description: >-
+        Proyección pública detallada de `HealthStatusEntity` (`toPublic(true)`). Extiende
+        `PublicHealth` con metadata de runtime.
+      allOf:
+        - $ref: "#/components/schemas/PublicHealth"
+        - type: object
+          required: [uptimeSeconds, nodeVersion, checkedAt]
+          properties:
+            uptimeSeconds:
+              type: number
+              description: Segundos desde que arrancó el proceso (`process.uptime()`).
+            nodeVersion:
+              type: string
+              description: Versión de Node del proceso (`process.version`).
+            checkedAt:
+              type: string
+              format: date-time
+              description: Marca de tiempo ISO 8601 de la comprobación.
+          additionalProperties: false
+
+    Error:
+      type: object
+      description: >-
+        Forma única de error de todo el arnés (ver `handleError` en cualquier
+        controller y `docs/conventions.md`). Nunca lleva stack trace.
+      required: [error]
+      properties:
+        error:
+          type: string
+      additionalProperties: false
+
+  responses:
+    BadRequest:
+      description: >-
+        Request inválido — el DTO de dominio devolvió error en su primer slot
+        (`[error?, dto?]`).
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error: 'verbose debe ser "true" o "false"'
+
+    Unauthorized:
+      description: No autenticado. Mapea a `CustomError.unauthorized()`.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error: Token no proporcionado
+
+    Forbidden:
+      description: Autenticado pero sin permisos. Mapea a `CustomError.forbidden()`.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error: No tienes permisos para esta acción
+
+    NotFound:
+      description: Recurso inexistente. Mapea a `CustomError.notFound()`.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error: Recurso no encontrado
+
+    InternalServerError:
+      description: >-
+        Error no controlado o no tipado. Mapea al `500` genérico de `handleError`;
+        nunca filtra el stack al cliente.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error: Internal Server Error

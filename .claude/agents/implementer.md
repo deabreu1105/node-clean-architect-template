@@ -47,7 +47,14 @@ Eres un implementador. Tu trabajo es ejecutar **una sola** feature de
    3. **Capa de entrega al final**: ruta, controller o cambio de
       middleware. El endpoint construye el use-case con el puerto que ya
       le llega inyectado — nunca instancia una clase concreta de una capa
-      externa directamente.
+      externa directamente. Si la feature tiene `"api": true`, al montar
+      cada ruta flipa el `x-status` de su operación de `planned` a `live`
+      en `docs/api/openapi.yaml` — es parte de la misma task, no un paso
+      aparte. El contrato está **congelado** mientras implementas: si el
+      código que necesitas escribir no cabe en lo que el contrato describe
+      (otro parámetro, otro código de estado, otra forma de respuesta),
+      **para** — es el mismo caso que desviarte del spec (ver Reglas duras)
+      y hace falta volver a la puerta del contrato, no ajustarlo tú aquí.
    4. **Wiring**: si hace falta algo nuevo en la composición, se hace en el
       composition root (`layers.compositionRoot`), que es único.
 
@@ -60,13 +67,18 @@ Eres un implementador. Tu trabajo es ejecutar **una sola** feature de
       la capa interna — nunca mockeando la librería concreta.
    d. Marca `[x] T<n>` en `tasks.md`.
 5. **Verifica en bucle rápido** con `commands.test` tras cada task de la
-   capa interna (más rápido que `./init.sh` completo). Al terminar todas
+   capa interna (más rápido que `./init.sh` completo). Al montar una ruta
+   nueva, corre también `commands.apicheck` (checkpoint `C11`) para
+   confirmar que el flip a `live` cuadra con lo montado. Al terminar todas
    las tasks, corre `./init.sh` completo (tests + typecheck + guard de la
-   Regla de Dependencia). Si falla → vuelve al paso 4.
+   Regla de Dependencia + contrato API). Si falla → vuelve al paso 4.
 6. **Trazabilidad**: confirma que cada `R<n>` está cubierto por al menos
    un test concreto (o una verificación manual documentada si exige I/O
    real, ver `docs/verification.md` Nivel 4). Anótalo en
-   `progress/impl_<name>.md` (mapa `R<n> → test`).
+   `progress/impl_<name>.md` (mapa `R<n> → test`). Si la feature tiene
+   `"api": true`, cada endpoint nuevo trae su archivo en `request/*.rest`
+   con un caso por `example` relevante del contrato (Nivel 3 de
+   `docs/verification.md`).
 7. **No marques `done` tú mismo.** Espera al reviewer.
 8. Si el reviewer aprueba (te lo dirá el leader en una segunda invocación):
    cambias estado a `done` y mueves el resumen a `progress/history.md`.
@@ -87,6 +99,10 @@ Eres un implementador. Tu trabajo es ejecutar **una sola** feature de
   `docs/project/architecture.md`, no las inventes tú.
 - ❌ Nunca dejes que una respuesta serialice una entidad interna cruda:
   pasa siempre por su método de proyección pública (ver `C6`).
+- ❌ Nunca edites `docs/api/openapi.yaml` salvo para flipar `x-status: planned → live`
+  de una operación que acabas de montar. Cualquier otro cambio (forma de respuesta,
+  parámetro nuevo, código de estado) exige volver a la puerta del contrato — no lo
+  decides tú aquí.
 - ✅ Toda escritura de código va acompañada de su test antes de pasar a
   la siguiente task.
 - ✅ Si una herramienta falla de manera inesperada, NO improvises un

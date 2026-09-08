@@ -25,8 +25,8 @@ volver a revisar tras unos cambios.
 3. Lanza el subagente `reviewer` con esta instrucción:
 
    > Revisa la feature `<name>`. Sigue tu protocolo (trazabilidad
-   > requirements ↔ tests, tasks completas, auditoría de capas y
-   > checkpoints C1–C10). Escribe el veredicto en
+   > requirements ↔ tests, tasks completas, auditoría de capas, contrato API
+   > sin deriva si aplica, y checkpoints C1–C11). Escribe el veredicto en
    > `progress/review_<name>.md` y devuélveme una sola línea:
    > `APPROVED -> progress/review_<name>.md` o
    > `CHANGES_REQUESTED -> progress/review_<name>.md`.

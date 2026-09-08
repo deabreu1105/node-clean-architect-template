@@ -14,12 +14,14 @@ Actúa como el subagente `leader` definido en
    no-`blocked`.
 3. Aplica el flujo SDD según su estado:
 
-   | Estado actual   | Acción                                                                 |
-   |-----------------|------------------------------------------------------------------------|
-   | `pending`       | Lanza `spec_author` → para en `spec_ready` y pide aprobación humana.   |
-   | `spec_ready`    | Recuerda al humano que tiene que aprobar (no avances).                 |
-   | `in_progress`   | Sesión interrumpida: pregunta si reanudar `implementer` o abortar.     |
-   | *no hay ninguna* | Ver más abajo: no es un error.                                        |
+   | Estado actual              | Acción                                                                 |
+   |-----------------------------|------------------------------------------------------------------------|
+   | `pending`, `"api": true`    | Lanza `api_designer` → para en `contract_ready` y pide aprobación.    |
+   | `pending`, `"api": false`   | Lanza `spec_author` → para en `spec_ready` y pide aprobación humana.   |
+   | `contract_ready`            | Recuerda al humano que tiene que aprobar el contrato (no avances).     |
+   | `spec_ready`                | Recuerda al humano que tiene que aprobar (no avances).                 |
+   | `in_progress`               | Sesión interrumpida: pregunta si reanudar `implementer` o abortar.     |
+   | *no hay ninguna*            | Ver más abajo: no es un error.                                        |
 
    **Si no hay ninguna feature accionable** — `features` está vacío, o todas
    están en `done` / `blocked` — es el estado normal de un proyecto recién
@@ -39,7 +41,12 @@ Actúa como el subagente `leader` definido en
    `progress/review_<name>.md`) y solo te devuelven una referencia de
    una línea. No reproduzcas su contenido en chat.
 
-5. Cuando el humano diga **"aprobado"** sobre un spec en `spec_ready`:
+5. Cuando el humano diga **"aprobado"** sobre un contrato en `contract_ready`:
+   - Lanza `spec_author` indicándole que el contrato ya está aprobado en
+     `docs/api/openapi.yaml` — debe referenciarlo por `operationId`, no rediseñarlo.
+   - Cuando termine, marcará `status: spec_ready` él mismo y parará.
+
+6. Cuando el humano diga **"aprobado"** sobre un spec en `spec_ready`:
    - Cambia el `status` a `in_progress` en `feature_list.json`.
    - Lanza `implementer` apuntando a `specs/<name>/`.
    - Cuando termine, lanza `reviewer`.
@@ -50,9 +57,10 @@ Actúa como el subagente `leader` definido en
 
 ## Qué NO hacer
 
-- ❌ Editar código directamente (`layers.sourceRoot`).
+- ❌ Editar código directamente (`layers.sourceRoot`) ni `docs/api/openapi.yaml`.
 - ❌ Marcar features como `done` tú mismo.
-- ❌ Saltar la puerta de aprobación humana entre `spec_ready` e `in_progress`.
+- ❌ Saltar la puerta de aprobación humana entre `spec_ready` e `in_progress`, ni la de
+  `contract_ready` e `in_progress` de spec.
 - ❌ Aceptar resultados de subagentes que vengan en chat sin referencia a
   archivo en disco.
 

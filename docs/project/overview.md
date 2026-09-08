@@ -34,9 +34,14 @@ Para verificar el ejemplo archivado: `pnpm test:example` (necesita su propio
 
 ## Endpoints
 
-| Método | Ruta | Auth | Handler |
-|---|---|---|---|
-| GET | `/api/health` | No | `HealthController.getHealth` |
+La fuente de verdad de la superficie HTTP es el contrato,
+[`docs/api/openapi.yaml`](../api/openapi.yaml) — verificado sin deriva contra el código
+por `scripts/check-api-contract.mjs` (checkpoint `C11`). Esta tabla es solo un resumen de
+navegación rápida; si discrepa del contrato, manda el contrato.
+
+| Método | Ruta | `operationId` | Auth | Handler |
+|---|---|---|---|---|
+| GET | `/api/health` | `getHealth` | No | `HealthController.getHealth` |
 
 `?verbose=true` añade `uptimeSeconds`, `nodeVersion` y `checkedAt`. Un valor que no sea
 `true` ni `false` responde `400` sin lanzar.

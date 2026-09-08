@@ -2,7 +2,7 @@
 
 > El `reviewer` recorre esta lista al final de cada feature y marca `[x]`/`[ ]` en su
 > veredicto (`progress/review_<name>.md`). Cada checkpoint tiene un **ID estable**
-> (`C1`…`C10`) que se cita desde los agentes, los slash commands y `docs/`.
+> (`C1`…`C11`) que se cita desde los agentes, los slash commands y `docs/`.
 >
 > **Este archivo es parte del arnés: no se edita por proyecto.** Enuncia las reglas en
 > términos de capas y roles; los nombres concretos de tu proyecto viven en
@@ -103,15 +103,35 @@ documentado en `progress/impl_<name>.md`. Todas las tasks de `specs/<name>/tasks
 de la sesión cerrada, y no quedan `console.log()` de debug, archivos temporales ni TODOs
 sin contexto.
 
+## C11 — Contrato API sin deriva
+
+Si el proyecto declara `harness.api` en `harness.config.json`, `docs/api/openapi.yaml` (o
+la ruta que declare `harness.api.contract`) es OpenAPI 3.1 válido, con `$ref` solo
+internos y `operationId` únicos, y toda operación trae `x-feature` + `x-status`. Las
+rutas **realmente montadas** en la factory de rutas (`harness.api.routerFactory`)
+coinciden exactamente con las operaciones `x-status: live` del contrato: ninguna ruta sin
+su operación, ninguna operación `live` sin su ruta, ninguna ruta montada cuya operación
+siga en `planned`.
+
+```bash
+# commands.apicheck de harness.config.json
+pnpm exec tsx scripts/check-api-contract.mjs
+# exit 0 esperado
+```
+
+Metodología y convenciones del contrato: `docs/api-design.md`. Si el proyecto no declara
+`harness.api`, este checkpoint no aplica — márcalo `[x]` con la nota «sin fase de
+contrato en este proyecto».
+
 ---
 
 ## Checkpoints del proyecto (`P1`…`Pn`)
 
-Si existe `docs/project/checkpoints.md`, el `reviewer` lo recorre **después** de `C10` y
+Si existe `docs/project/checkpoints.md`, el `reviewer` lo recorre **después** de `C11` y
 lo reporta con los mismos `[x]`/`[ ]`.
 
-Usa el prefijo **`P`, no `C11`**: los IDs `C` están reservados para el arnés, y así una
-versión futura del template puede añadir un `C11` sin chocar con la numeración de ningún
+Usa el prefijo **`P`, nunca `C<n>`**: los IDs `C` están reservados para el arnés, y así una
+versión futura del template puede añadir un `C12` sin chocar con la numeración de ningún
 proyecto.
 
 Ese archivo se entrega **ausente** a propósito. Créalo cuando tu proyecto tenga

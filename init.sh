@@ -96,6 +96,19 @@ echo ""
 echo "── 4. Regla de dependencia ─────────────────────────────"
 if ! ./scripts/check-dependency-rule.sh; then EXIT_CODE=1; fi
 
+# ── 4b. Contrato API ────────────────────────────────────────────────────────
+# Checkpoint C11: docs/api/openapi.yaml (harness.api.contract) sin deriva respecto a las
+# rutas realmente montadas. El cuerpo vive en scripts/check-api-contract.mjs porque
+# necesita importar código TypeScript (tsx), no bash.
+echo ""
+echo "── 4b. Contrato API ────────────────────────────────────"
+CMD_APICHECK="$(harness_cfg commands.apicheck "")"
+if [ -n "$CMD_APICHECK" ]; then
+  if eval "$CMD_APICHECK"; then :; else EXIT_CODE=1; fi
+else
+  warn "commands.apicheck no está definido en $HARNESS_CONFIG — se omite"
+fi
+
 # ── 5. Typecheck ────────────────────────────────────────────────────────────
 echo ""
 echo "── 5. Typecheck ────────────────────────────────────────"

@@ -21,7 +21,8 @@
     "dev": "pnpm dev",
     "build": "pnpm build",
     "typecheck": "pnpm exec tsc --noEmit",
-    "test": "pnpm test"
+    "test": "pnpm test",
+    "apicheck": "pnpm api:check"
   },
   "layers": {
     "sourceRoot": "src",
@@ -40,7 +41,8 @@
       "bcryptjs",
       "jsonwebtoken",
       "env-var",
-      "dotenv"
+      "dotenv",
+      "yaml"
     ],
     "testFilePattern": "*.test.ts"
   },
@@ -62,6 +64,15 @@
     "ideasDir": "docs/ideas",
     "logDir": ".harness",
     "skillsLock": "skills-lock.json",
+    "api": {
+      "contract": "docs/api/openapi.yaml",
+      "routerFactory": {
+        "module": "src/presentation/routes.ts",
+        "export": "AppRoutes",
+        "method": "routes"
+      },
+      "statusesRequiringContract": ["contract_ready", "spec_ready", "in_progress", "done"]
+    },
     "requiredFiles": [
       "harness.config.json",
       "feature_list.json",
@@ -81,7 +92,9 @@
       "docs/verification.md",
       "docs/specs.md",
       "docs/ideation.md",
-      "docs/workflow.md"
+      "docs/workflow.md",
+      "docs/api-design.md",
+      "docs/api/openapi.yaml"
     ]
   }
 }

@@ -16,5 +16,10 @@ paths:
 - El usuario autenticado vive en `req.user`, nunca en `req.body.user` — `req.body` es del
   cliente.
 - Cada endpoint nuevo trae su archivo en `request/*.rest`.
+- **Ninguna ruta nueva sin su operación en `docs/api/openapi.yaml`.** El contrato se
+  diseña y se aprueba antes que el código (ver `docs/api-design.md`). Al montar la ruta,
+  flipa su `x-status` de `planned` a `live` en la misma task — verifícalo con
+  `pnpm exec tsx scripts/check-api-contract.mjs` (checkpoint `C11`).
 
-Racional y ejemplos: `docs/architecture.md` y `CHECKPOINTS.md` C5/C6/C7.
+Racional y ejemplos: `docs/architecture.md`, `docs/api-design.md` y `CHECKPOINTS.md`
+C5/C6/C7/C11.

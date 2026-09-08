@@ -64,6 +64,24 @@
         "ideasDir": { "type": "string" },
         "logDir": { "type": "string" },
         "skillsLock": { "type": "string" },
+        "api": {
+          "type": "object",
+          "description": "Contrato OpenAPI API-first. Ver docs/api-design.md. Ausente = sin fase de contrato en este proyecto.",
+          "properties": {
+            "contract": { "type": "string", "default": "docs/api/openapi.yaml" },
+            "routerFactory": {
+              "type": "object",
+              "description": "Dónde vive la factory de rutas que scripts/check-api-contract.mjs instrumenta para el checkpoint C11.",
+              "required": ["module", "export", "method"],
+              "properties": {
+                "module": { "type": "string" },
+                "export": { "type": "string" },
+                "method": { "type": "string" }
+              }
+            },
+            "statusesRequiringContract": { "type": "array", "items": { "type": "string" } }
+          }
+        },
         "requiredFiles": {
           "type": "array",
           "items": { "type": "string" },

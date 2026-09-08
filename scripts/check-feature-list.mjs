@@ -112,6 +112,9 @@ for (const [i, f] of features.entries()) {
   if (typeof f?.sdd !== "boolean") {
     errors.push(`${at}: 'sdd' debe ser booleano`);
   }
+  if (typeof f?.api !== "boolean") {
+    errors.push(`${at}: 'api' debe ser booleano`);
+  }
   if (!validStatus.has(f?.status)) {
     errors.push(`${at}: estado inválido '${f?.status}' (válidos: ${[...validStatus].join(", ")})`);
   }

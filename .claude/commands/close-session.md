@@ -20,8 +20,11 @@ puedes editar archivos en `progress/` y `feature_list.json`, pero NO código
 
 2. **Confirma estado coherente.**
    - Como mucho 1 feature en `in_progress` en `feature_list.json`.
-   - Toda feature con `"sdd": true` y estado `spec_ready`/`in_progress`/
-     `done` tiene su `specs/<name>/{requirements,design,tasks}.md`.
+   - Toda feature con `"sdd": true` y estado `contract_ready`/`spec_ready`/
+     `in_progress`/`done` tiene su `specs/<name>/{requirements,design,tasks}.md`
+     (salvo que esté en `contract_ready` sin haber llegado aún al spec_author).
+   - Toda feature con `"api": true` en un estado que lo exige tiene sus
+     operaciones en `docs/api/openapi.yaml` (lo valida `./init.sh`, checkpoint `C11`).
    - El `reviewer` aprobó (`progress/review_<name>.md` contiene
      `APPROVED`) antes de marcar `done`.
 

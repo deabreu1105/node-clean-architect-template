@@ -18,6 +18,10 @@ Si alguno falta, **pregunta antes de escribir**:
   cubrible por un test concreto).
 - `sdd` — `true` por defecto para features nuevas. Solo `false` si el
   humano lo pide explícitamente para algo trivial que no merece spec.
+- `api` — `true` si la feature expone o cambia algo por HTTP (necesita pasar por
+  `docs/api/openapi.yaml` antes del spec, ver `docs/api-design.md`). `false` en
+  cualquier otro caso (lógica interna, tooling, etc.). Pregunta si no es obvio por la
+  descripción.
 
 ## Paso a paso
 
@@ -38,6 +42,7 @@ Si alguno falta, **pregunta antes de escribir**:
        "<criterio 2>"
      ],
      "sdd": true,
+     "api": false,
      "status": "pending"
    }
    ```
@@ -50,7 +55,7 @@ Si alguno falta, **pregunta antes de escribir**:
    ```
 
 5. Ejecuta `./init.sh`. Tiene que terminar verde (las features `pending`
-   con `sdd:true` no requieren spec todavía).
+   con `sdd:true` no requieren spec todavía, ni `api:true` requiere contrato todavía).
 
 ## Reglas duras
 
@@ -64,5 +69,5 @@ Si alguno falta, **pregunta antes de escribir**:
 ## Salida esperada en chat
 
 ```
-added -> feature #<N> <name> (pending, sdd:true)
+added -> feature #<N> <name> (pending, sdd:true, api:false)
 ```

@@ -67,6 +67,9 @@ Sigue el checklist del skill `brainstorming` adaptado a este harness:
   `harness.config.json`), qué puerto de la capa interna abstrae cualquier
   dependencia externa, flujo de datos, errores, tests. Ver
   `docs/architecture.md`.
+- Si la feature expone o cambia algo por HTTP, cubre también la intención de superficie
+  (recursos, métodos, códigos de estado relevantes) — no el contrato formal, eso lo hace
+  `/design-api` después. Ver `docs/api-design.md`.
 
 ### 6. HARD-GATE — Aprobación del diseño
 
@@ -115,6 +118,7 @@ Solo tras aprobación del humano:
        "<criterio verificable 2>"
      ],
      "sdd": true,
+     "api": <true si expone/cambia algo por HTTP, si no false>,
      "status": "pending"
    }
    ```
@@ -145,7 +149,7 @@ Tu salida final es:
 
 ```
 idea_approved -> docs/ideas/<fecha>-<topic>-design.md
-added -> feature #<N> <name> (pending, sdd:true)
+added -> feature #<N> <name> (pending, sdd:true, api:<true|false>)
 ```
 
 o si se bloquea:

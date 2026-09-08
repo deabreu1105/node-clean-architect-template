@@ -1,8 +1,8 @@
 # CLAUDE.md
 
-Punto de entrada único para Claude Code y para los 5 subagentes SDD de `.claude/agents/`
-(`leader`, `ideator`, `spec_author`, `implementer`, `reviewer`). Léelo primero y sigue sus
-referencias. `AGENTS.md` solo redirige aquí.
+Punto de entrada único para Claude Code y para los 6 subagentes SDD de `.claude/agents/`
+(`leader`, `ideator`, `api_designer`, `spec_author`, `implementer`, `reviewer`). Léelo
+primero y sigue sus referencias. `AGENTS.md` solo redirige aquí.
 
 > **Idioma:** todo el arnés se escribe en español — este archivo, `docs/`, `.claude/` y la
 > salida de `init.sh`.

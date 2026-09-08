@@ -48,9 +48,9 @@ const PACKAGE_MANAGERS = ["pnpm", "npm", "yarn"];
 
 // ── Comandos por gestor de paquetes ──────────────────────────────────────────
 const commandsFor = (pm) => ({
-  pnpm: { install: "pnpm install", dev: "pnpm dev", build: "pnpm build", typecheck: "pnpm typecheck", test: "pnpm test" },
-  npm:  { install: "npm install",  dev: "npm run dev", build: "npm run build", typecheck: "npm run typecheck", test: "npm test" },
-  yarn: { install: "yarn install", dev: "yarn dev", build: "yarn build", typecheck: "yarn typecheck", test: "yarn test" },
+  pnpm: { install: "pnpm install", dev: "pnpm dev", build: "pnpm build", typecheck: "pnpm typecheck", test: "pnpm test", apicheck: "pnpm api:check" },
+  npm:  { install: "npm install",  dev: "npm run dev", build: "npm run build", typecheck: "npm run typecheck", test: "npm test", apicheck: "npm run api:check" },
+  yarn: { install: "yarn install", dev: "yarn dev", build: "yarn build", typecheck: "yarn typecheck", test: "yarn test", apicheck: "yarn api:check" },
 }[pm]);
 
 // ── Plan de operaciones: se imprime en dry-run, se ejecuta con --apply ───────
@@ -182,6 +182,10 @@ function buildPlan(a) {
     writeFileSync("docs/project/overview.md", overviewFor(a, cmds));
   });
 
+  op("docs/api/openapi.yaml — se regenera con info.title/servers de este proyecto", () => {
+    writeFileSync("docs/api/openapi.yaml", contractFor(a));
+  });
+
   op("README.md — se sustituye por el readme del proyecto", () => {
     writeFileSync("README.md", readmeFor(a, cmds));
   });
@@ -263,6 +267,89 @@ Las pruebas manuales de la API viven en \`request/*.rest\` (formato REST Client)
 
 Sustituye esta tabla por los endpoints de tu proyecto. \`/api/health\` viene del esqueleto
 del template: bórralo cuando ya no te sirva de referencia.
+`;
+
+const contractFor = (a) => `openapi: 3.1.0
+info:
+  title: ${a.displayName}
+  description: |
+    ${a.description || `API REST de ${a.displayName}.`}
+
+    Contrato API-first: fuente de verdad de la superficie HTTP, verificada contra las
+    rutas realmente montadas por \`scripts/check-api-contract.mjs\` (checkpoint C11 de
+    CHECKPOINTS.md). Metodología: \`docs/api-design.md\`.
+  version: "0.1.0"
+servers:
+  - url: http://localhost:${a.port}
+    description: Desarrollo local (puerto de \`src/.env\`, ver PORT)
+
+tags:
+  - name: Health
+    description: Estado del servicio
+
+paths:
+  /api/health:
+    get:
+      operationId: getHealth
+      summary: Estado del servicio
+      tags: [Health]
+      x-feature: health
+      x-status: live
+      parameters:
+        - name: verbose
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: ["true", "false"]
+      responses:
+        "200":
+          description: Servicio saludable.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/PublicHealth"
+                  - $ref: "#/components/schemas/PublicHealthVerbose"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+components:
+  schemas:
+    PublicHealth:
+      type: object
+      required: [status, appName]
+      properties:
+        status: { type: string, const: ok }
+        appName: { type: string }
+      additionalProperties: false
+
+    PublicHealthVerbose:
+      allOf:
+        - $ref: "#/components/schemas/PublicHealth"
+        - type: object
+          required: [uptimeSeconds, nodeVersion, checkedAt]
+          properties:
+            uptimeSeconds: { type: number }
+            nodeVersion: { type: string }
+            checkedAt: { type: string, format: date-time }
+          additionalProperties: false
+
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+      additionalProperties: false
+
+  responses:
+    BadRequest:
+      description: Request inválido.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          example:
+            error: 'verbose debe ser "true" o "false"'
 `;
 
 const readmeFor = (a, c) => `# ${a.displayName}

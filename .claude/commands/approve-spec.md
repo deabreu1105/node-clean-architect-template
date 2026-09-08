@@ -33,7 +33,8 @@ Actúa como el subagente `leader` definido en
 
 ## Reglas duras
 
-- ❌ NO edites tú mismo el código (`layers.sourceRoot`) ni marques `done`.
+- ❌ NO edites tú mismo el código (`layers.sourceRoot`), `docs/api/openapi.yaml`, ni
+  marques `done`.
 - ❌ NO saltes al `implementer` si la feature no está en `spec_ready`.
 - ❌ NO aceptes resultados del subagente que vengan en chat sin
   referencia a archivo.

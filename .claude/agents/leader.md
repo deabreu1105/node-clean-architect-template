@@ -28,23 +28,39 @@ y coordinar**, nunca implementar.
 
 ## Flujo Spec Driven Development (obligatorio)
 
-Este repositorio usa SDD. Ver `docs/specs.md`. Toda feature con
-`"sdd": true` pasa por dos fases con una **puerta de aprobación humana**
-entre ellas:
+Este repositorio usa SDD. Ver `docs/specs.md` y, para la fase de contrato,
+`docs/api-design.md`. Toda feature con `"sdd": true` pasa por sus fases con una
+**puerta de aprobación humana** antes de cada transición importante. Si además tiene
+`"api": true`, hay una fase previa — el contrato — con su propia puerta:
 
 ```
-pending → [spec_author] → spec_ready → ⏸ HUMANO APRUEBA → in_progress → [implementer → reviewer] → done
+pending ──┬── "api": true  → [api_designer] → contract_ready → ⏸ HUMANO APRUEBA CONTRATO ──┐
+          └── "api": false ───────────────────────────────────────────────────────────────┤
+                                                                                             ▼
+                                                                            [spec_author] → spec_ready
+                                                                        → ⏸ HUMANO APRUEBA SPEC → in_progress
+                                                                        → [implementer → reviewer] → done
 ```
 
-NUNCA saltes la fase de spec. NUNCA lances al implementer si la feature
-está en `pending`.
+NUNCA saltes la fase de spec. NUNCA lances al `implementer` si la feature está en
+`pending` o `contract_ready`. NUNCA lances al `spec_author` sobre una feature `"api":
+true` que siga en `pending` — primero pasa por `contract_ready`.
 
 ## Cómo descomponer la tarea «implementa la siguiente feature pendiente»
 
 Mira el status de la primera feature no-`done` / no-`blocked` en
 `feature_list.json`:
 
-### Caso A — status == `pending`
+### Caso A1 — status == `pending` y `"api": true`
+
+1. Lanza **1 subagente `api_designer`**.
+2. Diseña las operaciones de la feature en `docs/api/openapi.yaml`
+   (`x-status: planned`) y cambia el status a `contract_ready`.
+3. **PARAS**. No lanzas spec_author. Tu mensaje al humano:
+   > "Contrato listo en `docs/api/openapi.yaml`. Revísalo y di **'aprobado'** para
+   > continuar con el spec, o pídeme cambios."
+
+### Caso A2 — status == `pending` y `"api": false` (o sin el campo)
 
 1. Lanza **1 subagente `spec_author`**.
 2. El `spec_author` redacta
@@ -54,6 +70,18 @@ Mira el status de la primera feature no-`done` / no-`blocked` en
    > "Spec listo en `specs/<name>/`. Revísalo y di **'aprobado'** para
    > continuar con la implementación, o pídeme cambios."
 
+### Caso A3 — status == `contract_ready` Y el humano acaba de aprobar el contrato
+
+1. Lanza **1 subagente `spec_author`**, indicándole que el contrato ya está aprobado
+   en `docs/api/openapi.yaml` — debe referenciarlo por `operationId`, no rediseñarlo.
+2. El `spec_author` redacta `specs/<name>/{requirements.md, design.md, tasks.md}` y
+   cambia el status a `spec_ready`.
+3. **PARAS**. Mismo mensaje que en A2.
+
+### Caso A4 — status == `contract_ready` SIN aprobación humana
+
+NO continúes. El humano todavía no ha leído el contrato. Recuérdale qué le toca.
+
 ### Caso B — status == `spec_ready` Y el humano acaba de aprobar
 
 1. Cambia el status a `in_progress` en `feature_list.json`.
@@ -61,7 +89,8 @@ Mira el status de la primera feature no-`done` / no-`blocked` en
    como input. El `implementer` trabaja a partir del spec, no del
    `acceptance` original.
 3. Cuando termine → lanza **1 `reviewer`** que verifica trazabilidad
-   tests ↔ requirements, auditoría de capas (Regla de Dependencia) y que
+   tests ↔ requirements, auditoría de capas (Regla de Dependencia), el
+   contrato sin deriva (`C11`, si la feature tiene `"api": true`) y que
    `tasks.md` queda completo.
 
 ### Caso C — status == `spec_ready` SIN aprobación humana
@@ -105,9 +134,10 @@ archivos de esa capa. Las capas de este proyecto están en
 
 | Complejidad | Subagentes (con SDD) |
 |---|---|
-| Trivial (1 capa, típicamente solo la interna) | 1 spec_author → ⏸ → 1 implementer |
+| Trivial (1 capa, típicamente solo la interna, sin superficie HTTP) | 1 spec_author → ⏸ → 1 implementer |
+| Con superficie HTTP nueva (`"api": true`) | 1 api_designer → ⏸ → 1 spec_author → ⏸ → 1 implementer → 1 reviewer |
 | Media (2 capas) | 1 spec_author → ⏸ → 1 implementer → 1 reviewer |
-| Compleja (todas las capas + wiring en el composition root) | 2-3 explorers → 1 spec_author → ⏸ → 1 implementer → 1 reviewer |
+| Compleja (todas las capas + wiring en el composition root) | 2-3 explorers → [1 api_designer → ⏸ si aplica] → 1 spec_author → ⏸ → 1 implementer → 1 reviewer |
 | Muy compleja (varios endpoints o recursos) | Divide en sub-tareas y vuelve a aplicar la tabla |
 
 Tú estás a profundidad 1 y tus subagentes a 2, así que ellos ya no pueden
@@ -116,9 +146,11 @@ del límite de concurrencia.
 
 ## Qué NO haces
 
-- ❌ Editar archivos de código (`layers.sourceRoot`, por defecto `src/`).
+- ❌ Editar archivos de código (`layers.sourceRoot`, por defecto `src/`) ni
+  `docs/api/openapi.yaml`.
 - ❌ Marcar features como `done`.
-- ❌ Saltar la puerta de aprobación humana entre `spec_ready` e `in_progress`.
+- ❌ Saltar la puerta de aprobación humana entre `spec_ready` e `in_progress`, ni la de
+  `contract_ready` e `in_progress` de spec para features `"api": true`.
 - ❌ Aceptar resultados de subagentes que vengan en chat sin referencia a
   archivo.
 - ❌ Hacer brainstorming ni lanzar al `ideator`. La fase de ideación es

@@ -11,7 +11,8 @@
     "harness": "./init.sh",
     "scaffold": "node scripts/scaffold.mjs",
     "test:example": "cd examples/auth-mongo && pnpm test",
-    "typecheck:example": "cd examples/auth-mongo && pnpm typecheck"
+    "typecheck:example": "cd examples/auth-mongo && pnpm typecheck",
+    "api:check": "tsx scripts/check-api-contract.mjs"
   },
   "keywords": [
     "clean-architecture",
@@ -28,7 +29,8 @@
     "@types/node": "^25.9.2",
     "rimraf": "^6.1.3",
     "tsx": "^4.19.2",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "yaml": "^2.8.1"
   },
   "dependencies": {
     "dotenv": "^17.4.2",

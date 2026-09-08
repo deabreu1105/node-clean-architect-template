@@ -7,6 +7,7 @@
 
 ```
 idea → [ideator] → ⏸ HUMANO APRUEBA DISEÑO → feature_list.json (pending)
+    → (si "api": true) [api_designer] → contract_ready → ⏸ HUMANO
     → [spec_author] → spec_ready → ⏸ HUMANO → in_progress
     → [implementer → reviewer] → done
 ```
@@ -33,9 +34,13 @@ acceptance criteria definidos, puedes saltar directo a `/add-feature`.
      puerto de la capa interna lo abstrae. Ver `docs/architecture.md`. No se
      propone nada que exija romper la Regla de Dependencia (p. ej. un
      use-case importando directamente una librería vetada).
-   - Acceptance criteria propuestos
+   - Acceptance criteria propuestos — si la feature expone HTTP, incluye la forma
+     esperada de la superficie (recursos, métodos, códigos de estado relevantes) para que
+     el `api_designer` no parta de cero en la fase de contrato. No es el contrato en sí
+     (eso lo formaliza `/design-api`), solo la intención.
 
-2. **Entrada en `feature_list.json`** con `status: "pending"` y `sdd: true`.
+2. **Entrada en `feature_list.json`** con `status: "pending"`, `sdd: true` y `api: true`
+   si la feature expone o cambia algo por HTTP.
 
 ## Convenciones para `docs/ideas/`
 
@@ -59,6 +64,7 @@ La fase de ideación tiene **dos** puertas humanas:
 | Agente | Relación con ideator |
 |--------|---------------------|
 | `leader` | No invoca al ideator. El ideator es human-triggered vía `/brainstorm`. |
-| `spec_author` | Toma la feature `pending` creada por el ideator y la refina en EARS. |
+| `api_designer` | Si la feature es `"api": true`, toma la intención de superficie HTTP del documento de ideación como punto de partida para el contrato. |
+| `spec_author` | Toma la feature `pending`/`contract_ready` creada por el ideator y la refina en EARS. |
 | `implementer` | Sin relación directa. Trabaja sobre el spec, no sobre el diseño de idea. |
 | `reviewer` | Sin relación directa. |

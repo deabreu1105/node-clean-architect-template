@@ -62,6 +62,14 @@ clase de `infrastructure` en ningún sitio bajo `presentation/`.
 
 Ninguna respuesta serializa la entidad directamente. Es el checkpoint `C6`.
 
+### Superficie HTTP
+
+La fuente de verdad es [`docs/api/openapi.yaml`](../api/openapi.yaml) (metodología en
+`docs/api-design.md`). Cada operación declara `x-feature` (la feature dueña) y
+`x-status` (`live`/`planned`); `scripts/check-api-contract.mjs` (checkpoint `C11` de
+`CHECKPOINTS.md`) falla si el código monta una ruta que el contrato no describe, o si el
+contrato promete una ruta `live` que el código no monta.
+
 ### Excepciones sancionadas al composition root
 
 **Ninguna, hoy.** Si tu proyecto necesita una (p. ej. una utilidad sin estado y de

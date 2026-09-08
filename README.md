@@ -1,9 +1,9 @@
 # Plantilla Clean Architecture + arnés SDD (Node + TypeScript)
 
 Template para arrancar proyectos backend con **Clean Architecture estricta** y un **arnés
-de Spec Driven Development multiagente** ya montado: 5 subagentes, 6 slash commands, reglas
-de arquitectura verificadas por script y una puerta de aprobación humana antes de que se
-escriba una línea de código.
+de Spec Driven Development multiagente** ya montado: 6 subagentes, 8 slash commands, reglas
+de arquitectura verificadas por script (incluido el contrato API-first) y hasta tres
+puertas de aprobación humana antes de que se escriba una línea de código.
 
 No es un boilerplate de código. Lo que aporta es el **proceso verificable** que va encima.
 
@@ -45,14 +45,20 @@ El scaffold pregunta nombre, descripción, gestor de paquetes y puerto; reescrib
 inyectado, la capa externa como único sitio que lee la configuración, y una frontera de
 proyección hacia el cliente. Cinco tests, sin base de datos ni `.env`.
 
-**El arnés SDD** — el flujo `pending → spec_ready → ⏸ humano → in_progress → done`, con
-`leader`, `ideator`, `spec_author`, `implementer` y `reviewer` en `.claude/agents/`, y los
-comandos `/brainstorm`, `/add-feature`, `/implement-next`, `/approve-spec`, `/run-review`
-y `/close-session`.
+**El arnés SDD** — el flujo `pending → [contract_ready] → spec_ready → ⏸ humano →
+in_progress → done`, con `leader`, `ideator`, `api_designer`, `spec_author`,
+`implementer` y `reviewer` en `.claude/agents/`, y los comandos `/brainstorm`,
+`/add-feature`, `/design-api`, `/approve-contract`, `/implement-next`, `/approve-spec`,
+`/run-review` y `/close-session`.
+
+**API-first** — toda feature que expone HTTP (`"api": true`) diseña y aprueba su
+contrato OpenAPI en `docs/api/openapi.yaml` **antes** de que exista su spec. Ver
+[`docs/api-design.md`](docs/api-design.md).
 
 **Verificación que no se puede saltar** — `./init.sh` comprueba el entorno, los archivos
-base, la validez de `feature_list.json` y sus specs, la Regla de Dependencia, el typecheck
-y la suite. Ninguna feature se marca `done` sin que esté en verde.
+base, la validez de `feature_list.json` y sus specs, la Regla de Dependencia, el contrato
+API sin deriva, el typecheck y la suite. Ninguna feature se marca `done` sin que esté en
+verde.
 
 **Reglas que se activan solas** — `.claude/rules/` lleva reglas cortas con `paths:` scope,
 así que la de la capa interna aparece justo cuando se edita la capa interna, y no antes.
@@ -76,6 +82,7 @@ vetados dentro de la capa interna y archivos obligatorios. `init.sh` y los scrip
 | Usar el arnés de principio a fin | [`docs/workflow.md`](docs/workflow.md) |
 | Entender la arquitectura | [`docs/architecture.md`](docs/architecture.md) |
 | Aprender el patrón línea a línea sobre el esqueleto de este template | [`CLEAN_ARCHITECTURE.md`](CLEAN_ARCHITECTURE.md) |
+| Diseñar el contrato de una API (metodología API-first) | [`docs/api-design.md`](docs/api-design.md) |
 | Escribir o leer un spec | [`docs/specs.md`](docs/specs.md) |
 | Saber cómo se demuestra que algo funciona | [`docs/verification.md`](docs/verification.md) |
 | Ver los criterios con los que revisa el `reviewer` | [`CHECKPOINTS.md`](CHECKPOINTS.md) |
