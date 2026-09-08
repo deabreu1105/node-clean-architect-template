@@ -1,0 +1,27 @@
+{
+  "project": "node-clean-architect-template",
+  "description": "Esqueleto Clean Architecture (Node + TypeScript, Express) con arnés SDD multiagente. Los campos 'project' y 'description' los rellena scripts/scaffold.mjs. Ver CLAUDE.md y docs/architecture.md.",
+  "rules": {
+    "one_feature_at_a_time": true,
+    "require_tests_to_close": true,
+    "require_approved_spec_to_implement": true,
+    "valid_status": ["pending", "spec_ready", "in_progress", "done", "blocked"],
+    "sdd_required_when": "feature has \"sdd\": true"
+  },
+  "features": [
+    {
+      "id": 1,
+      "name": "health",
+      "title": "Endpoint GET /api/health",
+      "description": "Slice vertical mínima que demuestra las tres capas: DTO con tupla de error en domain, puerto Clock inyectado, repositorio implementado en infrastructure (único sitio que lee config/) y frontera de salida vía toPublic(). Es el ejemplo vivo al que apuntan los snippets de docs/. Bórrala cuando tu proyecto tenga features de verdad.",
+      "acceptance": [
+        "GET /api/health responde 200 con { status: \"ok\", appName }",
+        "GET /api/health?verbose=true añade uptimeSeconds, nodeVersion y checkedAt",
+        "GET /api/health?verbose=<valor no booleano> responde 400 sin lanzar",
+        "La capa interna no importa nada de config/, data/, infrastructure/ ni presentation/"
+      ],
+      "sdd": false,
+      "status": "done"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "skills": {
+    "brainstorming": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/brainstorming/SKILL.md",
+      "dirHash": "31aab7fd68f917c6ab5475377e14001dd6f4f72a88679bc9faef9ac2c6cc17ca"
+    },
+    "caveman": {
+      "source": "juliusbrussee/caveman",
+      "sourceType": "github",
+      "skillPath": "skills/caveman/SKILL.md",
+      "dirHash": "eef1cf90d64306ee826e4b9386bbf567bdb0eed67ce1e690ae4dc57a92dae5bb"
+    },
+    "clean-architecture": {
+      "source": "wondelai/skills",
+      "sourceType": "github",
+      "skillPath": "clean-architecture/SKILL.md",
+      "dirHash": "25ef7d929d72ef6bee043c4853a441e8c8c4d5a52a9c339acfecafac5f8f1b31"
+    },
+    "openapi-spec-generation": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/documentation-generation/skills/openapi-spec-generation/SKILL.md",
+      "dirHash": "a48288aba83051b46e7e957b22a0239a5dac433b9c71ad58e55ccf6015e41caf"
+    }
+  }
+}

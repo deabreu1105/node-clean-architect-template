@@ -1,0 +1,42 @@
+{
+  "name": "node-clean-architect-template",
+  "version": "0.1.0",
+  "description": "Plantilla Clean Architecture (Node + TypeScript) con arnés SDD multiagente.",
+  "scripts": {
+    "dev": "tsx watch src/app.ts",
+    "build": "rimraf ./dist && tsc -p tsconfig.build.json",
+    "start": "pnpm build && node dist/app.js",
+    "test": "tsx --test 'src/**/*.test.ts'",
+    "typecheck": "tsc --noEmit",
+    "harness": "./init.sh",
+    "scaffold": "node scripts/scaffold.mjs",
+    "test:example": "cd examples/auth-mongo && pnpm test",
+    "typecheck:example": "cd examples/auth-mongo && pnpm typecheck"
+  },
+  "keywords": [
+    "clean-architecture",
+    "typescript",
+    "template",
+    "sdd",
+    "harness"
+  ],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.9.2",
+    "rimraf": "^6.1.3",
+    "tsx": "^4.19.2",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "env-var": "^7.5.0",
+    "express": "^5.2.1"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@11.21.0"
+}

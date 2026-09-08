@@ -1,0 +1,28 @@
+# Dependencias y artefactos de build
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+pnpm-debug.log
+
+# Variables de entorno reales (las plantillas .env.template SÍ se versionan)
+*.env
+*.env.local
+*.env.development
+*.env.test
+*.env.production
+
+# Salida del arnés (init.sh, scaffold)
+.harness/
+
+# NOTA: pnpm-lock.yaml y pnpm-workspace.yaml se versionan a propósito.
+#   - El lockfile es lo que hace reproducible `pnpm install --frozen-lockfile`;
+#     sin él, cada clon del template re-resuelve las dependencias transitivas.
+#   - pnpm-workspace.yaml lleva `allowBuilds: { esbuild: true }`, que es lo que
+#     permite el postinstall de esbuild que necesita tsx. Sin versionarlo, un
+#     clon nuevo tiene un tsx que no compila y se rompen `pnpm test` y `pnpm dev`.

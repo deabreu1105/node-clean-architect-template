@@ -1,0 +1,12 @@
+@hostname = localhost
+@portDev = 3000
+@hostDev = {{hostname}}:{{portDev}}
+
+### LOCAL: health - estado del servicio (respuesta mínima)
+GET http://{{hostDev}}/api/health HTTP/1.1
+
+### LOCAL: health - estado del servicio (respuesta detallada)
+GET http://{{hostDev}}/api/health?verbose=true HTTP/1.1
+
+### LOCAL: health - valor inválido, debe responder 400
+GET http://{{hostDev}}/api/health?verbose=quizás HTTP/1.1

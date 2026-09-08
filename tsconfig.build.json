@@ -1,0 +1,9 @@
+{
+  // Configuración de BUILD. Hereda todo de tsconfig.json y solo añade una cosa:
+  // los archivos de test no van al output de dist/.
+  //
+  // El typecheck (tsconfig.json) sí los incluye a propósito, para que un error de
+  // tipos en un test no pase desapercibido.
+  "extends": "./tsconfig.json",
+  "exclude": ["**/*.test.ts"]
+}

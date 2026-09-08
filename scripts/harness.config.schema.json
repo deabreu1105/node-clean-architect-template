@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "harness.config.json",
+  "description": "Configuración del arnés SDD. Se entrega solo para autocompletado del editor: NO se valida en tiempo de ejecución (los scripts check-*.mjs hacen sus propias comprobaciones, sin dependencias).",
+  "type": "object",
+  "required": ["configVersion", "project", "stack", "commands", "layers", "harness"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "configVersion": { "type": "integer", "const": 1 },
+    "project": {
+      "type": "object",
+      "required": ["name", "description"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+        "displayName": { "type": "string" },
+        "description": { "type": "string" },
+        "language": { "type": "string", "default": "es" }
+      }
+    },
+    "stack": {
+      "type": "object",
+      "required": ["runtime", "minRuntimeMajor", "packageManager"],
+      "properties": {
+        "runtime": { "type": "string", "enum": ["node"] },
+        "minRuntimeMajor": { "type": "integer", "minimum": 18 },
+        "packageManager": { "type": "string", "enum": ["pnpm", "npm", "yarn"] },
+        "depsDir": { "type": "string", "default": "node_modules" },
+        "sourceExtensions": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+      }
+    },
+    "commands": {
+      "type": "object",
+      "required": ["install", "test", "typecheck"],
+      "description": "Comandos ejecutables. init.sh los lee de aquí en vez de tenerlos literales.",
+      "additionalProperties": { "type": "string" }
+    },
+    "layers": {
+      "type": "object",
+      "required": ["sourceRoot", "inner", "outer", "bannedInInner"],
+      "properties": {
+        "sourceRoot": { "type": "string" },
+        "inner": { "type": "string", "description": "Capa que no puede depender de nadie." },
+        "outer": { "type": "array", "items": { "type": "string" } },
+        "compositionRoot": { "type": "string" },
+        "innerLayerRequired": { "type": "boolean", "default": true },
+        "bannedInInner": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Paquetes de terceros que la capa interna no puede importar. Conviene dejar aquí paquetes incluso si no están instalados: prohibir lo que no tienes cuesta cero y protege el día que alguien lo añada."
+        },
+        "testFilePattern": { "type": "string" }
+      }
+    },
+    "harness": {
+      "type": "object",
+      "required": ["featureList", "specsDir", "requiredFiles"],
+      "properties": {
+        "featureList": { "type": "string" },
+        "specsDir": { "type": "string" },
+        "specFiles": { "type": "array", "items": { "type": "string" } },
+        "statusesRequiringSpec": { "type": "array", "items": { "type": "string" } },
+        "maxInProgress": { "type": "integer", "minimum": 1 },
+        "progressDir": { "type": "string" },
+        "ideasDir": { "type": "string" },
+        "logDir": { "type": "string" },
+        "skillsLock": { "type": "string" },
+        "requiredFiles": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Si falta uno, init.sh FALLA. Solo lo que la maquinaria necesita de verdad."
+        },
+        "expectedFiles": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Si falta uno, init.sh AVISA. Documentación: un renombre no debe poner el arnés en rojo."
+        }
+      }
+    }
+  }
+}

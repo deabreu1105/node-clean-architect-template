@@ -1,0 +1,27 @@
+{
+  "name": "auth-mongo-example",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ejemplo congelado: API REST de autenticación con Clean Architecture (Express 5, Mongoose, JWT, bcrypt). No forma parte del proyecto raíz.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "tsx --test 'src/**/*.test.ts'",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.2",
+    "env-var": "^7.5.0",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.7.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.9.2",
+    "tsx": "^4.19.2",
+    "typescript": "^6.0.3"
+  }
+}

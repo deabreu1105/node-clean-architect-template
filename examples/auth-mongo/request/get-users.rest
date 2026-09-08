@@ -1,0 +1,16 @@
+@hostname = localhost
+@portDev = 3000
+@hostDev = {{hostname}}:{{portDev}}
+@contentType = application/json
+
+@token = <pega aquí el token que devuelve POST /api/auth/login>
+
+### LOCAL: get users - Obtener usuarios
+GET http://{{hostDev}}/api/auth/users HTTP/1.1
+content-type: {{contentType}}
+Authorization: Bearer {{token}}
+
+
+
+
+

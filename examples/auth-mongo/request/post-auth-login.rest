@@ -1,0 +1,20 @@
+@hostname = localhost
+@portDev = 3000
+@hostDev = {{hostname}}:{{portDev}}
+@contentType = application/json
+
+
+
+### LOCAL: login - Iniciar sesión
+POST http://{{hostDev}}/api/auth/login HTTP/1.1
+content-type: {{contentType}}
+
+{
+    "email": "andres@example.com",
+    "password": "password827391"
+}
+
+
+
+
+

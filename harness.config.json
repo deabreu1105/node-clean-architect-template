@@ -1,0 +1,87 @@
+{
+  "$schema": "./scripts/harness.config.schema.json",
+  "configVersion": 1,
+  "project": {
+    "name": "node-clean-architect-template",
+    "displayName": "Plantilla Clean Architecture (Node + TypeScript)",
+    "description": "Esqueleto Clean Architecture con arnés SDD multiagente. Los valores de este bloque los rellena scripts/scaffold.mjs.",
+    "language": "es"
+  },
+  "stack": {
+    "runtime": "node",
+    "minRuntimeMajor": 20,
+    "packageManager": "pnpm",
+    "depsDir": "node_modules",
+    "sourceExtensions": [
+      "ts"
+    ]
+  },
+  "commands": {
+    "install": "pnpm install",
+    "dev": "pnpm dev",
+    "build": "pnpm build",
+    "typecheck": "pnpm exec tsc --noEmit",
+    "test": "pnpm test"
+  },
+  "layers": {
+    "sourceRoot": "src",
+    "inner": "domain",
+    "outer": [
+      "config",
+      "data",
+      "infrastructure",
+      "presentation"
+    ],
+    "compositionRoot": "src/app.ts",
+    "innerLayerRequired": true,
+    "bannedInInner": [
+      "express",
+      "mongoose",
+      "bcryptjs",
+      "jsonwebtoken",
+      "env-var",
+      "dotenv"
+    ],
+    "testFilePattern": "*.test.ts"
+  },
+  "harness": {
+    "featureList": "feature_list.json",
+    "specsDir": "specs",
+    "specFiles": [
+      "requirements.md",
+      "design.md",
+      "tasks.md"
+    ],
+    "statusesRequiringSpec": [
+      "spec_ready",
+      "in_progress",
+      "done"
+    ],
+    "maxInProgress": 1,
+    "progressDir": "progress",
+    "ideasDir": "docs/ideas",
+    "logDir": ".harness",
+    "skillsLock": "skills-lock.json",
+    "requiredFiles": [
+      "harness.config.json",
+      "feature_list.json",
+      "package.json",
+      "tsconfig.json",
+      "CLAUDE.md",
+      "CHECKPOINTS.md",
+      "progress/current.md",
+      "progress/history.md"
+    ],
+    "expectedFiles": [
+      "README.md",
+      "CLEAN_ARCHITECTURE.md",
+      "docs/como-funciona.md",
+      "docs/architecture.md",
+      "docs/conventions.md",
+      "docs/verification.md",
+      "docs/specs.md",
+      "docs/ideation.md",
+      "docs/workflow.md"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  // El ejemplo se typechequea por separado: el tsconfig de la raíz solo mira
+  // "src/**/*.ts", así que examples/ queda fuera del build y del typecheck del
+  // proyecto. Esto es deliberado — ver examples/auth-mongo/README.md.
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist/",
+    "noEmit": true
+  },
+  "include": ["src/**/*.ts"]
+}
