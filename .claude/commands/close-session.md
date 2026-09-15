@@ -27,6 +27,10 @@ puedes editar archivos en `progress/` y `feature_list.json`, pero NO código
      operaciones en `docs/api/openapi.yaml` (lo valida `./init.sh`, checkpoint `C11`).
    - El `reviewer` aprobó (`progress/review_<name>.md` contiene
      `APPROVED`) antes de marcar `done`.
+   - Si la feature que cierra viene de un hallazgo de seguridad (su `description`
+     referencia `docs/security/findings/SEC-NNN-*.md`, o el frontmatter del hallazgo
+     tiene `feature: <name>`), voltea `status: feature → fixed` en ese frontmatter. Ver
+     `docs/security.md`.
 
 3. **Archiva la sesión.**
    - Lee `progress/current.md`.

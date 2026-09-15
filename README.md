@@ -1,7 +1,7 @@
 # Plantilla Clean Architecture + arnés SDD (Node + TypeScript)
 
 Template para arrancar proyectos backend con **Clean Architecture estricta** y un **arnés
-de Spec Driven Development multiagente** ya montado: 6 subagentes, 8 slash commands, reglas
+de Spec Driven Development multiagente** ya montado: 7 subagentes, 10 slash commands, reglas
 de arquitectura verificadas por script (incluido el contrato API-first) y hasta tres
 puertas de aprobación humana antes de que se escriba una línea de código.
 
@@ -55,6 +55,11 @@ in_progress → done`, con `leader`, `ideator`, `api_designer`, `spec_author`,
 contrato OpenAPI en `docs/api/openapi.yaml` **antes** de que exista su spec. Ver
 [`docs/api-design.md`](docs/api-design.md).
 
+**Auditoría de seguridad** — `/security-audit` audita el código con el skill OWASP
+`security-review` y documenta cada hallazgo en `docs/security/findings/`, sin tocar
+código; `/fix-finding` lo convierte en una feature `pending` que entra al mismo flujo SDD
+que cualquier otra. Ver [`docs/security.md`](docs/security.md).
+
 **Verificación que no se puede saltar** — `./init.sh` comprueba el entorno, los archivos
 base, la validez de `feature_list.json` y sus specs, la Regla de Dependencia, el contrato
 API sin deriva, el typecheck y la suite. Ninguna feature se marca `done` sin que esté en
@@ -83,6 +88,7 @@ vetados dentro de la capa interna y archivos obligatorios. `init.sh` y los scrip
 | Entender la arquitectura | [`docs/architecture.md`](docs/architecture.md) |
 | Aprender el patrón línea a línea sobre el esqueleto de este template | [`CLEAN_ARCHITECTURE.md`](CLEAN_ARCHITECTURE.md) |
 | Diseñar el contrato de una API (metodología API-first) | [`docs/api-design.md`](docs/api-design.md) |
+| Auditar seguridad y convertir un hallazgo en feature | [`docs/security.md`](docs/security.md) |
 | Escribir o leer un spec | [`docs/specs.md`](docs/specs.md) |
 | Saber cómo se demuestra que algo funciona | [`docs/verification.md`](docs/verification.md) |
 | Ver los criterios con los que revisa el `reviewer` | [`CHECKPOINTS.md`](CHECKPOINTS.md) |

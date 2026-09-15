@@ -20,6 +20,11 @@ pnpm-debug.log
 # Salida del arnés (init.sh, scaffold)
 .harness/
 
+# Directorio de trabajo del instalador de skills. Los skills vendorizados de
+# verdad viven en .claude/skills/ (versionado); esto es solo su fuente
+# temporal de instalación, nunca un directorio real del arnés.
+.agents/
+
 # NOTA: pnpm-lock.yaml y pnpm-workspace.yaml se versionan a propósito.
 #   - El lockfile es lo que hace reproducible `pnpm install --frozen-lockfile`;
 #     sin él, cada clon del template re-resuelve las dependencias transitivas.

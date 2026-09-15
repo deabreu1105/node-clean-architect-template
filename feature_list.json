@@ -24,6 +24,21 @@
       "sdd": false,
       "api": true,
       "status": "done"
+    },
+    {
+      "id": 2,
+      "name": "sec_001_qs_dos_dependencia_vulnerable",
+      "title": "Fix SEC-001 — Dependencia transitiva qs@6.15.3 vulnerable a Denegación de Servicio",
+      "description": "Remediación del hallazgo SEC-001 (Media). Ver docs/security/findings/SEC-001-qs-dos-dependencia-vulnerable.md",
+      "acceptance": [
+        "pnpm audit (o pnpm audit --prod) no reporta ningún aviso sobre qs tras el fix",
+        "pnpm why qs resuelve a una versión >=6.16.0 (cubre ambos rangos vulnerables)",
+        "./init.sh sigue en verde (tests + typecheck + guard de la Regla de Dependencia) tras el bump",
+        "express.urlencoded() declara un limit explícito y hay un test que confirma que un body por encima del límite responde 413 en vez de colgar el proceso"
+      ],
+      "sdd": true,
+      "api": false,
+      "status": "pending"
     }
   ]
 }

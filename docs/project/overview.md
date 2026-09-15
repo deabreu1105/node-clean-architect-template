@@ -20,6 +20,7 @@ pnpm typecheck                     # solo typecheck (incluye los archivos de tes
 pnpm build                         # rimraf dist + tsc -p tsconfig.build.json
 pnpm start                         # build y luego node dist/app.js
 ./init.sh                          # verificación completa del arnés
+/security-audit                    # auditoría de seguridad bajo demanda (ver docs/security.md)
 ```
 
 No hay linter configurado. `pnpm test` corre la suite de la capa interna con

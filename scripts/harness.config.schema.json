@@ -62,6 +62,7 @@
         "maxInProgress": { "type": "integer", "minimum": 1 },
         "progressDir": { "type": "string" },
         "ideasDir": { "type": "string" },
+        "securityDir": { "type": "string", "description": "Dónde vive la auditoría de seguridad bajo demanda. Ver docs/security.md." },
         "logDir": { "type": "string" },
         "skillsLock": { "type": "string" },
         "api": {

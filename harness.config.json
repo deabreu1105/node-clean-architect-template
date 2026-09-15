@@ -62,6 +62,7 @@
     "maxInProgress": 1,
     "progressDir": "progress",
     "ideasDir": "docs/ideas",
+    "securityDir": "docs/security",
     "logDir": ".harness",
     "skillsLock": "skills-lock.json",
     "api": {
@@ -94,7 +95,8 @@
       "docs/ideation.md",
       "docs/workflow.md",
       "docs/api-design.md",
-      "docs/api/openapi.yaml"
+      "docs/api/openapi.yaml",
+      "docs/security.md"
     ]
   }
 }

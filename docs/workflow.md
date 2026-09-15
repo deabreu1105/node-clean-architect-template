@@ -72,6 +72,32 @@ Dos caminos, según qué tan clara tengas la idea:
 | Idea vaga, quieres explorarla | `/brainstorm` | El `ideator` dialoga contigo (una pregunta a la vez, 2-3 enfoques, diseño sección por sección), escribe `docs/ideas/<fecha>-<topic>-design.md`, y **tras tu aprobación explícita** inserta la feature en `feature_list.json` como `pending` |
 | Idea ya clara, con criterios de aceptación concretos | `/add-feature` | Te pide `name`/`title`/`description`/`acceptance[]`, valida el JSON, la deja `pending` directamente — sin diálogo largo |
 
+Hay un tercer camino, independiente de estos dos: la auditoría de seguridad.
+
+## 2b. Camino alternativo: auditoría de seguridad
+
+```
+/security-audit [scope]
+        │
+        ▼
+ [security_auditor] → docs/security/YYYY-MM-DD-audit.md
+                     → docs/security/findings/SEC-NNN-<slug>.md (uno por hallazgo)
+        │
+        ▼
+   ⏸ TÚ PRIORIZAS
+        │
+/fix-finding SEC-NNN
+        │
+        ▼
+ feature_list.json: nueva entrada pending, sdd:true ──▶ vuelve al paso 3 (ciclo SDD normal)
+```
+
+`/security-audit` (sin argumentos, con una ruta/glob, o con `feature:<name>`) lanza al
+`security_auditor`, que audita usando el skill `security-review` y escribe un archivo
+por hallazgo — nunca toca código. Tú decides cuáles priorizar; `/fix-finding SEC-NNN`
+convierte el que elijas en una feature `pending` normal, que entra al ciclo SDD del
+paso 3 igual que cualquier otra. Metodología completa: `docs/security.md`.
+
 ## 3. El ciclo SDD — el corazón del flujo
 
 ```
@@ -190,3 +216,5 @@ se editan entradas viejas), lo restaura desde
 | `/approve-spec` | Cerrar la puerta de aprobación humana y disparar implementación | `leader` → `implementer` → `reviewer` |
 | `/run-review` | Forzar una pasada del `reviewer` sobre la feature `in_progress` | `reviewer` |
 | `/close-session` | Cerrar la sesión de forma limpia | `leader` |
+| `/security-audit` | Auditar código en busca de vulnerabilidades (bajo demanda) | `security_auditor` |
+| `/fix-finding` | Convertir un hallazgo `SEC-NNN` en feature `pending` | — (edición directa de `feature_list.json` + frontmatter del hallazgo) |

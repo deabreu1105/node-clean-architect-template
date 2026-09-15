@@ -7,10 +7,11 @@
 
 ## A quién aplica
 
-De los 5 subagentes, solo `leader` e `ideator` dialogan extensamente con el humano, así
+De los 7 subagentes, solo `leader` e `ideator` dialogan extensamente con el humano, así
 que solo ellos usan el skill [`caveman`](../skills/caveman/SKILL.md) en nivel `full`, para
-reducir ~75% el consumo de tokens. `spec_author`, `implementer` y `reviewer` escriben en
-disco y devuelven una sola línea de referencia, así que caveman no les aplica.
+reducir ~75% el consumo de tokens. `api_designer`, `spec_author`, `implementer`,
+`reviewer` y `security_auditor` escriben en disco y devuelven una sola línea de
+referencia, así que caveman no les aplica.
 
 Una sesión normal de Claude Code editando código directamente (sin subagente) **no** está
 obligada a hablar en caveman.

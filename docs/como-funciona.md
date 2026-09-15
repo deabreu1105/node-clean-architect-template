@@ -14,7 +14,7 @@ Dos cosas que conviven:
 
 1. **Un esqueleto de código** — Clean Architecture estricta, con una sola ruta de ejemplo
    (`GET /api/health`) que demuestra las tres capas de punta a punta.
-2. **Un arnés de proceso** — cinco subagentes, seis slash commands y una verificación que
+2. **Un arnés de proceso** — siete subagentes, diez slash commands y una verificación que
    no se puede saltar, montados para que las features nuevas pasen por especificación
    antes de por código.
 
@@ -111,7 +111,12 @@ actualizado y ver qué ha aprendido el arnés desde entonces.
                           /close-session
 ```
 
-Lo que escribes tú son ocho comandos:
+Hay un tercer camino de entrada a `pending`, paralelo a `/brainstorm` y `/add-feature`:
+`/security-audit` lanza al `security_auditor`, que documenta hallazgos en
+`docs/security/findings/` sin tocar código; `/fix-finding SEC-NNN` convierte uno en
+feature y desde ahí sigue el mismo ciclo de arriba. Ver `docs/security.md`.
+
+Lo que escribes tú son diez comandos:
 
 | Comando | Cuándo |
 |---|---|
@@ -123,6 +128,8 @@ Lo que escribes tú son ocho comandos:
 | `/approve-spec` | Has leído el spec y te vale |
 | `/run-review` | Forzar una review (p. ej. si la sesión se cortó a medias) |
 | `/close-session` | Cerrar dejando el repositorio en verde y la bitácora al día |
+| `/security-audit` | Auditar código en busca de vulnerabilidades (bajo demanda, no cambia código) |
+| `/fix-finding` | Convertir un hallazgo `SEC-NNN` en feature `pending`, para que entre al flujo de arriba |
 
 El `implementer` recorre las tasks **de dentro hacia afuera**: primero el DTO, el use-case
 y el contrato en la capa interna; después la implementación concreta; al final la ruta. No
@@ -178,7 +185,7 @@ Todo lo específico del stack vive en **`harness.config.json`**:
 
 Si el próximo proyecto usa Prisma en vez de Mongoose, cambias `bannedInInner` y el guard
 se ajusta solo. Si tu capa interna se llama `core`, cambias `inner`. **`init.sh`,
-`CHECKPOINTS.md` y los cinco agentes ya no nombran nada de ningún stack concreto.**
+`CHECKPOINTS.md` y los siete agentes ya no nombran nada de ningún stack concreto.**
 
 Conviene dejar en `bannedInInner` paquetes que ni siquiera tienes instalados: prohibir lo
 que no usas cuesta cero y te protege el día que alguien lo añada.

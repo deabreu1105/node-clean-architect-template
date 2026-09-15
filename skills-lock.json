@@ -24,6 +24,12 @@
       "sourceType": "github",
       "skillPath": "plugins/documentation-generation/skills/openapi-spec-generation/SKILL.md",
       "dirHash": "a48288aba83051b46e7e957b22a0239a5dac433b9c71ad58e55ccf6015e41caf"
+    },
+    "security-review": {
+      "source": "getsentry/skills",
+      "sourceType": "github",
+      "skillPath": "skills/security-review/SKILL.md",
+      "dirHash": "4a30f5d561c1d89d3841baf3216ee0bbff682d3496525176bf688bbf85634767"
     }
   }
 }

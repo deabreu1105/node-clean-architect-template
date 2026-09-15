@@ -12,6 +12,12 @@ commands `/brainstorm`, `/add-feature`, `/design-api`, `/approve-contract`,
 `.claude/commands/`) son las entradas. Para una edición puntual de código, sáltate todo
 esto.
 
+Hay un camino de entrada adicional, paralelo a `/brainstorm` y `/add-feature`: la
+auditoría de seguridad bajo demanda (`security_auditor`, `/security-audit`,
+`/fix-finding`) documentada en `docs/security.md`. Un hallazgo nunca toca código
+directamente — se convierte en feature con `/fix-finding` y de ahí sigue el mismo flujo
+SDD que cualquier otra.
+
 **La guía narrativa paso a paso está en `docs/workflow.md`** — el flujo completo con
 diagrama, cuándo usar cada comando y cómo se encadena una sesión. Aquí solo está lo
 normativo.
@@ -32,13 +38,15 @@ normativo.
 | `docs/specs.md` | Proceso SDD: notación EARS, los 3 archivos, la puerta de aprobación | Antes de redactar o leer un spec |
 | `docs/ideation.md` | La fase de ideación pre-SDD y cuándo usar `/brainstorm` | Antes de hacer brainstorming |
 | `docs/ideas/` | Documentos de diseño que produce el `ideator` | Para el porqué de una feature |
+| `docs/security.md` | Metodología de la auditoría de seguridad bajo demanda: contrato de un hallazgo, severidades, estados, cómo pasa a feature | Antes de correr `/security-audit` o leer un hallazgo |
+| `docs/security/` | `YYYY-MM-DD-audit.md` (informe por pasada) + `findings/SEC-NNN-<slug>.md` (un archivo por hallazgo) | Para ver o priorizar hallazgos abiertos |
 | `docs/architecture.md` | Estándar normativo de arquitectura — contra esto evalúa el `reviewer` | Antes de implementar |
 | `CLEAN_ARCHITECTURE.md` | Guía narrativa del patrón, línea a línea sobre el ejemplo `GET /api/health` de este template | Para aprender el patrón, no para verificarlo (eso es `docs/architecture.md`) |
 | `docs/conventions.md` | Estilo, nombres, estructura de archivos | Antes de escribir código |
 | `docs/verification.md` | Cómo demostrar que el trabajo está hecho, incl. trazabilidad | Antes de declarar una task `done` |
 | `CHECKPOINTS.md` | Criterios objetivos de "estado final correcto" (`C1`–`C11`) | Para auto-evaluarte |
 | `docs/project/` | Lo específico de **este** proyecto: overview, arquitectura concreta, puntos ciegos | Se carga solo vía `CLAUDE.md` |
-| `.claude/agents/` | Las 5 definiciones de subagentes | Si orquestas trabajo |
+| `.claude/agents/` | Las 7 definiciones de subagentes | Si orquestas trabajo |
 | `.claude/rules/` | Reglas cortas que se activan al editar archivos que hacen match | Automático, no hace falta abrirlas |
 | `.claude/skills/clean-architecture/` | Teoría general (SOLID, boundaries) con rúbrica de diagnóstico | Si necesitas la teoría detrás de una regla |
 | `examples/` | Material de referencia congelado: una app completa y ciclos SDD terminados | Si quieres ver el formato aplicado de verdad |
@@ -62,6 +70,10 @@ normativo.
 - **Toda dependencia externa se envuelve en un adapter.** Añadir una nueva a
   `package.json` requiere discusión previa: la feature queda `blocked` hasta acordarla.
   Nada llama a una librería de terceros directamente fuera de su adapter.
+- **Un hallazgo de seguridad nunca se arregla saltándose el flujo SDD.** El
+  `security_auditor` solo documenta (`docs/security/findings/`); `/fix-finding` lo
+  convierte en feature `pending`; de ahí en adelante pasa por las mismas puertas que
+  cualquier otra feature. Ver `docs/security.md`.
 
 ## Las tres puertas
 
