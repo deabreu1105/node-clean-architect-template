@@ -87,6 +87,10 @@ El implementer documenta el mapa en `progress/impl_<name>.md`:
 - R3 → verificación manual: `request/get-health.rest` contra `pnpm dev`
 ```
 
+Si `R<n>` deriva de un escenario Gherkin (`docs/specs.md` § Escenarios de origen), el
+nombre del test debería espejar el título del escenario — así la cadena completa
+(escenario → `R<n>` → test) se sigue de un vistazo sin saltar entre archivos.
+
 ## Anti-patrones (no hacer)
 
 - ❌ "He añadido el endpoint, debería funcionar." → falta test ejecutable.

@@ -38,6 +38,13 @@ Nunca lances subagentes propios: estás a profundidad 2 y no te queda margen.
    exige base de datos, red o servidor levantado, márcalo explícitamente
    como tal — lo verificará el implementer con `docs/verification.md`
    Nivel 3, no con un test de dominio.
+   Si el humano entrega los acceptance criteria como escenarios Gherkin
+   (`Característica`/`Escenario`/`Dado`/`Cuando`/`Entonces`), presérvalos **verbatim**
+   — sin reformatear, sin traducir, sin resumir — en una sección `## Escenarios de
+   origen` al principio de `requirements.md`, antes del primer `R<n>` (ver
+   `docs/specs.md` § Escenarios de origen). Desglosa cada escenario en uno o más `R<n>`
+   EARS y documenta la correspondencia en la tabla de trazabilidad final. Sin Gherkin de
+   origen, este paso no cambia respecto a lo de siempre.
 4. Redacta `design.md`: archivos a tocar, firmas nuevas, excepciones
    (siempre la clase de error tipado del dominio), alternativa descartada
    con justificación, y la sección obligatoria **"Capas afectadas y
@@ -92,6 +99,9 @@ aplica.
   cuando exija I/O real, por una verificación manual explícita
   (`docs/verification.md` Nivel 3). Si no es ninguna de las dos cosas,
   parte el requirement o márcalo como blocker.
+- ❌ Nunca inventes un escenario Gherkin que el humano no entregó — la sección
+  `## Escenarios de origen` preserva una fuente que ya existía, nunca la genera el
+  `spec_author` por iniciativa propia.
 
 ## Comunicación
 

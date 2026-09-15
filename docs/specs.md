@@ -82,6 +82,52 @@ SI el parámetro `verbose` llega con un valor que no es `"true"` ni
 nombre el parámetro, sin lanzar una excepción.
 ```
 
+### Escenarios de origen (Gherkin, opcional)
+
+Cuando el humano (o QA, o producto) entrega los acceptance criteria ya redactados como
+escenarios Gherkin (`Característica` / `Escenario` / `Dado`/`Cuando`/`Y`/`Entonces`/
+`Pero`), se preservan **verbatim** — sin reformatear, sin traducir, sin resumir — en una
+sección `## Escenarios de origen` al principio de `requirements.md`, antes del primer
+`R<n>`:
+
+````markdown
+## Escenarios de origen
+
+> Preservados tal cual los entregó el equipo. No se reformatean ni se traducen — son la
+> fuente; los R<n> de abajo son su formalización EARS.
+
+```gherkin
+Característica: Inicio de sesión de usuarios
+
+  Escenario: Inicio de sesión exitoso con credenciales válidas
+    Dado que el usuario está en la página de inicio de sesión
+    Cuando el usuario ingresa su correo electrónico válido
+    Y el usuario ingresa su contraseña correcta
+    Y hace clic en el botón "Iniciar Sesión"
+    Entonces el sistema debe redirigirlo a la página de inicio
+    Y debe mostrar un mensaje de bienvenida "Hola, Usuario"
+```
+````
+
+Cada escenario se desglosa después en uno o más `R<n>` EARS — el Gherkin nunca sustituye
+al EARS, porque el `reviewer` solo verifica trazabilidad contra `R<n>`, no contra
+escenarios. La correspondencia N:M (un escenario puede cubrir varios `R<n>`, un `R<n>`
+puede derivar de varios escenarios) se documenta en la tabla de trazabilidad al final del
+archivo — ver § Trazabilidad más abajo.
+
+**Colisión léxica a vigilar:** el patrón EARS "Evento" ya usa `CUANDO` y el patrón "No
+deseado" ya usa `SI...ENTONCES` — un escenario Gherkin en español reutiliza esas mismas
+palabras (`Cuando`, `Entonces`) con un significado distinto: EARS declara una regla
+universal ("CUANDO pasa X, el sistema SIEMPRE DEBE Y"), Gherkin narra un ejemplo concreto
+("Dado este estado, cuando ocurre esto, entonces pasa aquello"). Por eso el Gherkin va
+siempre dentro de su propio bloque fenced ` ```gherkin `, nunca mezclado en la misma frase
+que un `R<n>` — la separación visual es la que evita la ambigüedad al leer.
+
+**Alcance:** esta sección es opcional y solo aparece cuando el Gherkin ya existía como
+entrada. El `spec_author` **nunca inventa** un escenario que el humano no entregó — si no
+hay Gherkin de origen, `requirements.md` se ve exactamente como antes de esta convención,
+solo con los `R<n>` EARS.
+
 ## design.md — decisiones técnicas
 
 Captura **antes** de tocar código:
@@ -132,6 +178,19 @@ Ejemplo:
 El `implementer` marca `[x]` cada task al completarla. El `reviewer`
 rechaza si queda alguna `[ ]` sin justificación documentada.
 
+`tasks.md` sigue citando solo `R<n>` por id — nunca copia el Gherkin de origen ni lo
+repite en prosa. Cuando un `R<n>` deriva de un escenario Gherkin (§ Escenarios de
+origen), la única convención extra es que el nombre del test que lo cubre debería
+espejar el título del escenario, para que la cadena completa se pueda seguir de un
+vistazo sin saltar entre archivos:
+
+```
+Escenario "Inicio de sesión exitoso con credenciales válidas" (Gherkin, requirements.md)
+  → R1, R2 (EARS, requirements.md)
+    → T5 "Test ... Cubre: R1, R2" (tasks.md)
+      → test "logs the user in and shows the welcome message on valid credentials"
+```
+
 ## Trazabilidad (regla dura)
 
 - Cada test relevante a la feature debe poder mapearse a un `R<n>` de su
@@ -142,7 +201,33 @@ rechaza si queda alguna `[ ]` sin justificación documentada.
 - El `reviewer` comprueba esta correspondencia explícitamente y rechaza
   si falta.
 
-El `implementer` documenta el mapa en `progress/impl_<name>.md`:
+`requirements.md` cierra con una tabla de trazabilidad hacia atrás, hacia el origen de
+cada `R<n>`. Dos variantes, según de dónde salió el spec:
+
+```markdown
+## Trazabilidad con `acceptance` del feature_list.json
+| Acceptance criterion | Cubierto por |
+|---|---|
+| GET /api/health responde 200 con { status, appName } | R1 |
+```
+
+o, cuando `requirements.md` tiene una sección `## Escenarios de origen`:
+
+```markdown
+## Trazabilidad con escenarios Gherkin
+| Escenario | Cubierto por |
+|---|---|
+| Inicio de sesión exitoso con credenciales válidas | R1, R2 |
+| Inicio de sesión fallido con contraseña incorrecta | R3 |
+```
+
+La relación es N:M en ambos casos — un acceptance o escenario puede cubrir varios `R<n>`,
+y viceversa. Un `R<n>` sin acceptance/escenario de origen es aceptable si es una
+salvaguarda trivialmente verificable (documéntalo en prosa junto a la tabla); un
+acceptance o escenario sin ningún `R<n>` que lo cubra no lo es — significa que el spec
+quedó incompleto.
+
+El `implementer` documenta el mapa hacia el código en `progress/impl_<name>.md`:
 
 ```markdown
 ## Trazabilidad

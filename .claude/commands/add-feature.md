@@ -15,7 +15,12 @@ Si alguno falta, **pregunta antes de escribir**:
 - `title` — frase corta humana.
 - `description` — 1–2 frases describiendo qué hace.
 - `acceptance` — lista de criterios verificables (cada uno debe ser
-  cubrible por un test concreto).
+  cubrible por un test concreto). Si el humano tiene escenarios Gherkin completos
+  (`Característica`/`Escenario`/`Dado`/`Cuando`/`Entonces`), `acceptance` sigue siendo
+  frases cortas — una por escenario, resumida — nunca el bloque Gherkin íntegro dentro
+  del JSON. El Gherkin completo se le entrega al `spec_author` aparte (pegado en el
+  chat, o anotado en `progress/current.md`) cuando toque redactar el spec: él lo
+  preserva verbatim en `requirements.md` (ver `docs/specs.md` § Escenarios de origen).
 - `sdd` — `true` por defecto para features nuevas. Solo `false` si el
   humano lo pide explícitamente para algo trivial que no merece spec.
 - `api` — `true` si la feature expone o cambia algo por HTTP (necesita pasar por

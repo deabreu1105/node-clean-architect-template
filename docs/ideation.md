@@ -38,6 +38,10 @@ acceptance criteria definidos, puedes saltar directo a `/add-feature`.
      esperada de la superficie (recursos, métodos, códigos de estado relevantes) para que
      el `api_designer` no parta de cero en la fase de contrato. No es el contrato en sí
      (eso lo formaliza `/design-api`), solo la intención.
+     Si la idea ya trae escenarios Gherkin de origen (p. ej. los aportó un compañero de
+     QA o producto), el `ideator` los conserva **tal cual** en el documento de diseño —
+     no los resume ni los convierte a EARS él mismo. Esa formalización es trabajo del
+     `spec_author` (ver `docs/specs.md` § Escenarios de origen).
 
 2. **Entrada en `feature_list.json`** con `status: "pending"`, `sdd: true` y `api: true`
    si la feature expone o cambia algo por HTTP.
