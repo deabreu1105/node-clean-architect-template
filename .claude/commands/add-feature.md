@@ -27,6 +27,9 @@ Si alguno falta, **pregunta antes de escribir**:
   `docs/api/openapi.yaml` antes del spec, ver `docs/api-design.md`). `false` en
   cualquier otro caso (lógica interna, tooling, etc.). Pregunta si no es obvio por la
   descripción.
+- `jira` — **opcional**. Solo si el humano lo menciona (ya tiene la Story creada en
+  Jira, p. ej. `PROJ-123`). Nunca lo preguntes de forma proactiva ni bloquees la
+  creación de la feature por su ausencia. Ver `docs/jira-mapping.md`.
 
 ## Paso a paso
 
@@ -51,6 +54,10 @@ Si alguno falta, **pregunta antes de escribir**:
      "status": "pending"
    }
    ```
+
+   Si el humano dio un `jira`, añádelo como campo adicional (p. ej. tras `title`):
+   `"jira": "PROJ-123"`. Sin él, el bloque no lleva el campo — nunca lo rellenes con un
+   valor inventado ni con `null`.
 
 3. Insértalo al final del array `features` (antes del `]`).
 4. Verifica que el JSON sigue siendo válido:

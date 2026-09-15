@@ -47,6 +47,37 @@ Si la feature es `"api": true`, hay una puerta previa: `pending → [api_designe
 contract_ready → ⏸ HUMANO → spec_author...`. El `spec_author` entonces referencia el
 contrato ya aprobado en vez de diseñarlo — ver `docs/api-design.md`.
 
+## Historia de usuario (obligatoria)
+
+`requirements.md` abre siempre con una sección `## Historia de usuario` — antes de
+cualquier otra cosa, incluso antes de `## Escenarios de origen` si la feature trae
+Gherkin. Es el "para qué": una sola frase en el formato clásico de historia de usuario,
+que ancla el resto del spec a un valor concreto para alguien.
+
+```markdown
+## Historia de usuario (PROJ-123)
+
+Como usuario registrado, quiero iniciar sesión con mi correo y contraseña, para acceder
+a mi panel de control.
+```
+
+- El `(PROJ-123)` del encabezado es **opcional** — solo aparece si la feature declara un
+  `jira` en `feature_list.json` (ver `docs/jira-mapping.md`).
+- **A diferencia de los escenarios Gherkin, la Historia de usuario nunca queda ausente.**
+  Si la feature ya trae Gherkin de origen y su bloque `Característica:` incluye su propio
+  narrative "Como/Quiero/Para" (es la convención estándar de un `.feature` file), la
+  Historia de usuario de aquí lo **cita literal** — nunca redacta una versión distinta a
+  la que ya viene en el Gherkin. Si no hay Gherkin, el `spec_author` la redacta él mismo
+  a partir de `title`/`description`/`acceptance` de `feature_list.json` — es una sola
+  frase, así que no hace falta que el humano la traiga ya escrita.
+- La Historia de usuario **no sustituye a los `R<n>`**: sigue siendo el `reviewer` quien
+  únicamente verifica `R<n>` ↔ test (§ Trazabilidad más abajo). Es contexto de lectura,
+  no una unidad verificable por sí misma.
+- **Granularidad: una Historia de usuario por spec, siempre.** Coincide con la regla dura
+  "una sola feature a la vez" (`maxInProgress: 1`) — cada `specs/<name>/` resuelve
+  exactamente una. Si tu equipo agrupa varias historias relacionadas en Jira, eso es un
+  Epic del lado de Jira; el arnés no necesita saberlo (ver `docs/jira-mapping.md`).
+
 ## requirements.md — EARS estricto
 
 Las requirements se redactan en **EARS** (Easy Approach to Requirements
@@ -189,6 +220,20 @@ Escenario "Inicio de sesión exitoso con credenciales válidas" (Gherkin, requir
   → R1, R2 (EARS, requirements.md)
     → T5 "Test ... Cubre: R1, R2" (tasks.md)
       → test "logs the user in and shows the welcome message on valid credentials"
+```
+
+Como una spec tiene exactamente una Historia de usuario (§ arriba), el vínculo hacia
+ella es estructural — todas las `T<n>` de ese `tasks.md` la resuelven por construcción,
+sin necesidad de etiquetar cada task con su id. Basta una línea de cabecera al principio
+del archivo:
+
+```markdown
+# Tasks — login
+
+> Todas las tasks de este archivo resuelven la Historia de usuario de
+> `requirements.md` (`PROJ-123`, si aplica).
+
+- [ ] T1 — ...
 ```
 
 ## Trazabilidad (regla dura)

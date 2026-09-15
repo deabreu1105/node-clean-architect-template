@@ -3,10 +3,14 @@ paths:
   - "specs/**/requirements.md"
 ---
 
-# `requirements.md` — EARS estricto (+ Gherkin de origen si aplica)
+# `requirements.md` — Historia de usuario + EARS estricto (+ Gherkin si aplica)
 
 Estás editando un `requirements.md`. Formato normativo completo: `docs/specs.md`.
 
+- Abre siempre con `## Historia de usuario` (obligatoria, nunca falta): una frase
+  "Como/Quiero/Para", con el `jira` de la feature en el encabezado si existe
+  (`## Historia de usuario (PROJ-123)`). Si hay Gherkin de origen con su propio
+  narrative, cítalo literal — nunca redactes uno distinto.
 - Cada requirement es un párrafo numerado `## R<n>`, uno de los 5 patrones EARS
   (Ubicuo, Evento, Estado, Opcional, No deseado). Un solo `DEBE` por requirement, nunca
   verbos blandos ("podría", "puede", "soporta").

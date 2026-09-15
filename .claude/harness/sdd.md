@@ -35,7 +35,8 @@ normativo.
 | `docs/como-funciona.md` | Modelo mental: qué es el arnés y por qué está montado así | Primera vez que tocas este repositorio |
 | `docs/workflow.md` | Guía narrativa: cómo usar el arnés de inicio a fin | Para el paso a paso de cada fase |
 | `docs/api-design.md` | Metodología API-first: anatomía del contrato, `x-feature`/`x-status`, cómo se verifica | Antes de diseñar o leer `docs/api/openapi.yaml` |
-| `docs/specs.md` | Proceso SDD: notación EARS, los 3 archivos, la puerta de aprobación | Antes de redactar o leer un spec |
+| `docs/specs.md` | Proceso SDD: Historia de usuario, notación EARS, escenarios Gherkin opcionales, los 3 archivos, la puerta de aprobación | Antes de redactar o leer un spec |
+| `docs/jira-mapping.md` | Equivalencia de artefactos del arnés con Jira Software (feature↔Story, R\<n\>↔criterio de aceptación, T\<n\>↔Sub-task) — reflejo manual, no sincronización | Si tu equipo lleva estas features también en Jira |
 | `docs/ideation.md` | La fase de ideación pre-SDD y cuándo usar `/brainstorm` | Antes de hacer brainstorming |
 | `docs/ideas/` | Documentos de diseño que produce el `ideator` | Para el porqué de una feature |
 | `docs/security.md` | Metodología de la auditoría de seguridad bajo demanda: contrato de un hallazgo, severidades, estados, cómo pasa a feature | Antes de correr `/security-audit` o leer un hallazgo |
